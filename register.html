@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeydiyyat - AzerGuest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            padding: 50px;
+            text-align: center;
+            color: white;
+        }
+
+        .register-header h1 {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .register-header p {
+            font-size: 17px;
+            opacity: 0.95;
+        }
+
+        .register-form {
+            padding: 50px;
+        }
+
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+            transition: width 0.5s ease;
+            z-index: 1;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.4s ease;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-circle.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .step-circle.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 16px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(59, 130, 246, 0.45);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #6b7280;
+        }
+
+        .login-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #2563eb;
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 30px;
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.5s ease, slideOutRight 0.5s ease 2.5s;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .notification-error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .register-header {
+                padding: 35px 25px;
+            }
+
+            .register-header h1 {
+                font-size: 28px;
+            }
+
+            .register-form {
+                padding: 30px 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-progress {
+                margin-bottom: 35px;
+            }
+
+            .step-label {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>🌍 AzerGuest-ə Xoş Gəlmisiniz!</h1>
+            <p>Azərbaycanı kəşf etmək üçün qeydiyyatdan keçin</p>
+        </div>
+
+        <div class="register-form">
+            <div class="form-progress">
+                <div class="progress-line" id="progressLine"></div>
+                <div class="progress-step">
+                    <div class="step-circle active" data-step="1">1</div>
+                    <span class="step-label">Şəxsi</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" data-step="2">2</div>
+                    <span class="step-label">Səyahət</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" data-step="3">3</div>
+                    <span class="step-label">Təsdiq</span>
+                </div>
+            </div>
+
+            <form id="registerForm">
+                <!-- Step 1: Personal Info -->
+                <div class="form-step active" data-step="1">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Ad Soyad <span class="required">*</span></label>
+                            <input type="text" name="name" required placeholder="Adınızı daxil edin">
+                        </div>
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" name="email" required placeholder="ornek@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefon</label>
+                            <input type="tel" name="phone" placeholder="+994 XX XXX XX XX">
+                        </div>
+                        <div class="form-group">
+                            <label>Şifrə <span class="required">*</span></label>
+                            <input type="password" name="password" required placeholder="Ən az 6 simvol">
+                        </div>
+                        <div class="form-group">
+                            <label>Şifrə təkrar <span class="required">*</span></label>
+                            <input type="password" name="password_confirm" required placeholder="Şifrəni təkrar daxil edin">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Travel Info -->
+                <div class="form-step" data-step="2">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Cins <span class="required">*</span></label>
+                            <select name="gender" required>
+                                <option value="">Seçin</option>
+                                <option value="Kişi">Kişi</option>
+                                <option value="Qadın">Qadın</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Yaş <span class="required">*</span></label>
+                            <input type="number" name="age" required min="18" max="100" placeholder="18-100">
+                        </div>
+                        <div class="form-group">
+                            <label>Bölgə <span class="required">*</span></label>
+                            <select name="region" required>
+                                <option value="">Seçin</option>
+                                <option value="Bakı">Bakı</option>
+                                <option value="Gəncə">Gəncə</option>
+                                <option value="Sumqayıt">Sumqayıt</option>
+                                <option value="Şəki">Şəki</option>
+                                <option value="Quba">Quba</option>
+                                <option value="Lənkəran">Lənkəran</option>
+                                <option value="Qəbələ">Qəbələ</option>
+                                <option value="Mingəçevir">Mingəçevir</option>
+                                <option value="Naxçıvan">Naxçıvan</option>
+                                <option value="Digər">Digər</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ailə</label>
+                            <select name="family">
+                                <option value="0">Uşaq yoxdur</option>
+                                <option value="1">1 uşaq</option>
+                                <option value="2">2+ uşaq</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>İllik səyahət sayı</label>
+                            <input type="number" name="trips_per_year" min="0" max="50" value="0" placeholder="0-50">
+                        </div>
+                        <div class="form-group">
+                            <label>İllik büdcə (₼)</label>
+                            <input type="number" name="avg_budget_per_year" min="0" step="100" value="0" placeholder="məs: 2000">
+                        </div>
+                        <div class="form-group">
+                            <label>Sevimli məkan</label>
+                            <input type="text" name="favorite_destination" placeholder="məs: Şəki, Quba">
+                        </div>
+                        <div class="form-group">
+                            <label>İstirahət növü</label>
+                            <select name="vacation_type">
+                                <option value="">Seçin</option>
+                                <option value="deniz">Dənizkənarı</option>
+                                <option value="dag">Dağlar</option>
+                                <option value="tarix">Tarixi</option>
+                                <option value="macera">Macəra</option>
+                                <option value="gol">Göllər</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Səyahət marağı (1-10)</label>
+                            <input type="range" name="travel_interest" min="1" max="10" value="5" oninput="this.nextElementSibling.textContent = this.value">
+                            <output>5</output>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Confirmation -->
+                <div class="form-step" data-step="3">
+                    <div style="text-align: center; padding: 40px 0;">
+                        <div style="font-size: 80px; margin-bottom: 25px;">✅</div>
+                        <h2 style="font-size: 32px; color: #1f2937; margin-bottom: 15px;">Hazırsınız!</h2>
+                        <p style="font-size: 18px; color: #6b7280; margin-bottom: 30px;">
+                            Qeydiyyatınızı tamamlamaq üçün təsdiq düyməsini basın
+                        </p>
+                        <div style="background: #f9fafb; border-radius: 16px; padding: 25px; text-align: left; max-width: 500px; margin: 0 auto;">
+                            <h3 style="margin-bottom: 15px; color: #3b82f6;">📋 Qeydiyyat məlumatları:</h3>
+                            <div id="confirmationData" style="line-height: 2; color: #4b5563;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">⬅ Geri</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Növbəti ➡</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">✨ Qeydiyyatı Tamamla</button>
+                </div>
+            </form>
+
+            <div class="login-link">
+                Artıq hesabınız var? <a href="./login.html">Giriş edin</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('registerForm');
+
+        // Update progress
+        function updateProgress() {
+            const progressLine = document.getElementById('progressLine');
+            const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressLine.style.width = percentage + '%';
+
+            // Update circles
+            document.querySelectorAll('.step-circle').forEach((circle, index) => {
+                const step = index + 1;
+                if (step < currentStep) {
+                    circle.classList.add('completed');
+                    circle.classList.remove('active');
+                    circle.textContent = '✓';
+                } else if (step === currentStep) {
+                    circle.classList.add('active');
+                    circle.classList.remove('completed');
+                    circle.textContent = step;
+                } else {
+                    circle.classList.remove('active', 'completed');
+                    circle.textContent = step;
+                }
+            });
+
+            // Update form steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+
+            // Update buttons
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+            nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
+            submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+
+            // Show confirmation data
+            if (currentStep === 3) {
+                showConfirmationData();
+            }
+        }
+
+        // Show confirmation data
+        function showConfirmationData() {
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            const html = `
+                <strong>Ad:</strong> ${data.name}<br>
+                <strong>Email:</strong> ${data.email}<br>
+                <strong>Cins:</strong> ${data.gender}<br>
+                <strong>Yaş:</strong> ${data.age}<br>
+                <strong>Bölgə:</strong> ${data.region}<br>
+                <strong>Ailə:</strong> ${data.family == 0 ? 'Uşaq yoxdur' : data.family == 1 ? '1 uşaq' : '2+ uşaq'}<br>
+                <strong>İllik səyahət:</strong> ${data.trips_per_year} dəfə<br>
+                <strong>Sevimli məkan:</strong> ${data.favorite_destination || 'Göstərilməyib'}
+            `;
+            
+            document.getElementById('confirmationData').innerHTML = html;
+        }
+
+        // Validate step
+        function validateStep(step) {
+            const currentStepEl = document.querySelector(`.form-step[data-step="${step}"]`);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+            
+            for (let input of inputs) {
+                if (!input.value.trim()) {
+                    input.focus();
+                    showNotification('Bütün məlumatları doldurun', 'error');
+                    return false;
+                }
+            }
+
+            // Validate password match on step 1
+            if (step === 1) {
+                const password = form.querySelector('[name="password"]').value;
+                const confirm = form.querySelector('[name="password_confirm"]').value;
+                
+                if (password.length < 6) {
+                    showNotification('Şifrə ən az 6 simvol olmalıdır', 'error');
+                    return false;
+                }
+                
+                if (password !== confirm) {
+                    showNotification('Şifrələr uyğun gəlmir', 'error');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Next button
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                currentStep++;
+                updateProgress();
+            }
+        });
+
+        // Previous button
+        prevBtn.addEventListener('click', () => {
+            currentStep--;
+            updateProgress();
+        });
+
+        // Submit form
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // Remove password_confirm
+            delete data.password_confirm;
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Yüklənir...';
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Qeydiyyat uğurlu oldu! Yönləndirilirsiniz...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showNotification(result.message || 'Xəta baş verdi', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '✨ Qeydiyyatı Tamamla';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Server xətası', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✨ Qeydiyyatı Tamamla';
+            }
+        });
+
+        // Show notification
+        function showNotification(message, type) {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span style="font-size: 22px;">${type === 'success' ? '✅' : '❌'}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
